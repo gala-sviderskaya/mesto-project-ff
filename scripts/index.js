@@ -2,7 +2,6 @@
 const cardTemplate = document.querySelector("#card-template").content; //что будем вставлять
 // @todo: DOM узлы
 const placeList  = document.querySelector('.places__list'); //куда будем вставлять
-const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true); // клонируем
 
 // @todo: Функция удаления карточки
 function deleteCard(card) {
