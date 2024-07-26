@@ -13,6 +13,7 @@ function createCardElement(object, removeCardElement) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true); // клонируем
   cardElement.querySelector('.card__image').src = object.link;
   cardElement.querySelector('.card__image').alt = object.name;
+  cardElement.querySelector('.card__title').textContent = object.name;
   const removeButton = cardElement.querySelector('.card__delete-button');
   removeButton.addEventListener('click', () => {
     removeCardElement(cardElement);
