@@ -1,29 +1,17 @@
-function keyHandler(evt) {
+function keyHandler(element, evt) {
   if (evt.key === 'Escape') {
-    const pOpened = document.querySelector('.popup_is-opened');
-    if (pOpened) {
-      pOpened.classList.remove('popup_is-opened');
-    }
+    closePopup(element);
   }
 }
 
 function openPopup(element) {
   element.classList.add('popup_is-opened');
-  document.addEventListener('keydown', keyHandler);
+  document.addEventListener('keydown', (evt) => keyHandler(element, evt));
 }
 
-function clickOverlay(evt) {
-  if (evt.target.closest('.popup') && evt.target.classList.contains('popup_is-opened')) {
-    evt.target.classList.remove('popup_is-opened');
-  }
+function closePopup(popup) {
+  popup.classList.remove('popup_is-opened');
+   document.removeEventListener('keydown', (evt) => keyHandler(popup, evt));
 }
 
-function closePopup(evt) {
-  const popupElement = evt.target.closest('.popup');
-  if(popupElement || (evt.type === 'submit')) {
-    popupElement.classList.remove('popup_is-opened');
-    document.removeEventListener('keydown', keyHandler);
-  }
-}
-
-export {openPopup, clickOverlay, closePopup};
+export {openPopup, closePopup};
