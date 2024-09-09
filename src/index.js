@@ -29,7 +29,6 @@ function OpenImagePopup(objImg) {
   openPopup(popupCardImage);
 }
 
-// @todo: Вывести карточки на страницу
 initialCards.forEach((elem) => {
   const card = createCardElement(elem, deleteCard, likeCard, OpenImagePopup);
   placeList.append(card);
