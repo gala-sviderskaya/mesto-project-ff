@@ -31,7 +31,7 @@ function openImagePopup(objImg) {
 initialCards.forEach((elem) => {
   const card = createCardElement(elem, deleteCard, likeCard, openImagePopup);
   placeList.append(card);
-})
+});
 
 popups.forEach((popup) => {
   const closeButton = popup.querySelector('.popup__close'); // Находим в попапе кнопку крестик
@@ -42,8 +42,7 @@ popups.forEach((popup) => {
     } // Устанавливаем слушатель оверлея
   });
   popup.classList.add('popup_is-animated'); // Добавляем модификатор для плавного открытия и закрытия попапов
-}
-);
+});
 
 profileEditBtn.addEventListener('click', () => {
   openPopup(popupProfile);
