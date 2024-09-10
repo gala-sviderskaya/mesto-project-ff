@@ -1,17 +1,18 @@
-function keyHandler(element, evt) {
+function keyHandler(evt) {
   if (evt.key === 'Escape') {
-    closePopup(element);
+    const popup = document.querySelector('.popup_is-opened');
+    closePopup(popup);
   }
 }
 
-function openPopup(element) {
-  element.classList.add('popup_is-opened');
-  document.addEventListener('keydown', (evt) => keyHandler(element, evt));
+function openPopup(popup) {
+  popup.classList.add('popup_is-opened');
+  document.addEventListener('keydown', keyHandler);
 }
 
 function closePopup(popup) {
   popup.classList.remove('popup_is-opened');
-   document.removeEventListener('keydown', (evt) => keyHandler(popup, evt));
+  document.removeEventListener('keydown', keyHandler);
 }
 
 export {openPopup, closePopup};
