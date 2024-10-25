@@ -1,0 +1,13 @@
+.card__likes-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  /*align-items: center;*/
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  color: currentColor;
+  font-family: inherit;
+  font-weight: 400;
+  text-align: center;
+}
