@@ -3,9 +3,7 @@
 const cardTemplate = document.querySelector("#card-template").content; //что будем вставлять
 
 export const isLiked = (cardElement) => {
-  //console.log(cardLikeBtn);
   const cardLikeBtn = cardElement.querySelector('.card__like-button');
-  //console.log());
   return cardLikeBtn.classList.contains('card__like-button_is-active');
 }
 

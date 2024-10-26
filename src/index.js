@@ -9,12 +9,19 @@ const popupProfile = document.querySelector('.popup_type_edit');
 const profileEditBtn = document.querySelector('.profile__edit-button');
 const profileAddBtn = document.querySelector('.profile__add-button');
 const formProfile = document.querySelector('[name="edit-profile"]');
+const inputProfileName = formProfile.querySelector('.popup__input_type_name');
+const inputProfileDesc = formProfile.querySelector('.popup__input_type_description');
 const profileTitle = document.querySelector('.profile__title');
 const profileDesc = document.querySelector('.profile__description');
 const profileImage = document.querySelector('.profile__image');
+const profileSubmitBtn = formProfile.querySelector('.popup__button');
+
 const popupAddCard = document.querySelector('.popup_type_new-card');
 const popupAvatar = document.querySelector('.popup_avatar');
 const formAvatar = document.querySelector('[name="avatar"]');
+const avatarSubmitBtn = formAvatar.querySelector('.popup__button');
+const inputAvatarUrl = formAvatar.querySelector('.popup__input_type_avatar');
+
 
 const placeList  = document.querySelector('.places__list');
 const popupCardImage = document.querySelector('.popup_type_image');
@@ -24,6 +31,8 @@ const popupImageCaption = popupCardImage.querySelector('.popup__caption');
 const formPlace = document.querySelector('[name="new-place"]');
 const placeName = document.querySelector('.popup__input_type_card-name');
 const linkPlace = document.querySelector('.popup__input_type_url');
+const placeSubmitBtn = formPlace.querySelector('.popup__button');
+
 export const validationConfig = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
@@ -52,10 +61,10 @@ popups.forEach((popup) => {
 });
 
 profileEditBtn.addEventListener('click', () => {
-  formProfile.querySelector('.popup__input_type_name').value = profileTitle.textContent;
-  formProfile.querySelector('.popup__input_type_description').value = profileDesc.textContent;
+  inputProfileName.value = profileTitle.textContent;
+  inputProfileDesc.value = profileDesc.textContent;
   openPopup(popupProfile);
-  formProfile.querySelector('.popup__button').textContent = 'Сохранить';
+  profileSubmitBtn.textContent = 'Сохранить';
   clearValidation(formProfile, validationConfig);
 });
 
@@ -63,26 +72,29 @@ profileAddBtn.addEventListener('click', () => {
   openPopup(popupAddCard);
   formPlace.reset();
   clearValidation(formPlace, validationConfig);
-  formPlace.querySelector('.popup__button').textContent = 'Сохранить';
+  placeSubmitBtn.textContent = 'Сохранить';
 });
 
 profileImage.addEventListener('click', () => {
   openPopup(popupAvatar);
   formAvatar.reset();
   clearValidation(formAvatar, validationConfig);
-  formAvatar.querySelector('.popup__button').textContent = 'Сохранить';
+  avatarSubmitBtn.textContent = 'Сохранить';
 })
 
 function submitAvatarForm(popup, evt) {
     evt.preventDefault();
     baseApi.updateAvatar({
-      avatar: popup.querySelector('.popup__input_type_avatar').value
+      avatar: inputAvatarUrl.value
     }).then ((avatarData) => {
       profileImage.setAttribute('style', `background-image: url(${avatarData.avatar})`);
       closePopup(popup);
     })
+    .catch((err) => {
+      console.log(err);
+    })
     .finally(() => {
-      popup.querySelector('.popup__button').textContent = 'Сохранение...';
+      avatarSubmitBtn.textContent = 'Сохранение...';
     });
 }
 
@@ -91,15 +103,18 @@ formAvatar.addEventListener('submit', (evt) => submitAvatarForm(popupAvatar, evt
 function submitProfileForm(popup, evt) {
     evt.preventDefault();
     baseApi.updateProfile({
-      name: popup.querySelector('.popup__input_type_name').value,
-      about: popup.querySelector('.popup__input_type_description').value
+      name: inputProfileName.value,
+      about: inputProfileDesc.value
     }).then ((userInfoObject) => {
       profileTitle.textContent = userInfoObject.name;
       profileDesc.textContent = userInfoObject.about;
       closePopup(popup);
     })
+    .catch((err) => {
+      console.log(err);
+    })
     .finally(() => {
-      popup.querySelector('.popup__button').textContent = 'Сохранение...';
+      profileSubmitBtn.textContent = 'Сохранение...';
     });
 }
 
@@ -122,9 +137,8 @@ function submitPlaceForm(popup, evt) {
       console.log(err);
     })
     .finally(() => {
-      popup.querySelector('.popup__button').textContent = 'Сохранение...';
+      placeSubmitBtn.textContent = 'Сохранение...';
     })
-  formPlace.reset();
 }
 
 formPlace.addEventListener('submit', (evt) => submitPlaceForm(popupAddCard, evt));
@@ -176,13 +190,15 @@ Promise.all([baseApi.getUserInfo(), baseApi.getListCards()])
 .then(([userData, listCards]) => {
   profileTitle.textContent = userData.name;
   profileDesc.textContent = userData.about;
-  console.log(userData);
   profileImage.setAttribute('style', `background-image: url(${userData.avatar})`);
   const profileID = userData._id
   listCards.forEach((cardData) => {
     renderCard(cardData,profileID);
   });
 })
+.catch((err) => {
+  console.log(err);
+});
 
 
 

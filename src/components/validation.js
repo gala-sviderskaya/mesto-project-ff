@@ -53,29 +53,21 @@ const setEventListeners = (formElement, object) => {
   });
 };
 
-const enableValidation = (object) => {
+export const enableValidation = (object) => {
   const formList = Array.from(document.querySelectorAll(object.formSelector));
   formList.forEach((formElement) => {
     setEventListeners(formElement, object);
   });
 };
 
-const clearValidation = (formElement, object) => {
-  const errorElements = Array.from(formElement.querySelectorAll(`.${object.errorClass}`));
+export const clearValidation = (formElement, object) => {
   const inputList = Array.from(formElement.querySelectorAll(`.${object.inputErrorClass}`));
   const buttonElement = formElement.querySelector(object.submitButtonSelector);
-
-  errorElements.forEach(errorElement => {
-    errorElement.classList.remove(object.errorClass);
-  });
   inputList.forEach(inputElement => {
-    inputElement.classList.remove(object.inputErrorClass);
-  });
-
+    hideInputError(formElement, inputElement, object);
+  })
   buttonElement.disabled = true;
   buttonElement.classList.add(object.inactiveButtonClass);
 }
-
-export {enableValidation, clearValidation};
 
 
