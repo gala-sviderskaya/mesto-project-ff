@@ -33,6 +33,9 @@ const placeName = document.querySelector('.popup__input_type_card-name');
 const linkPlace = document.querySelector('.popup__input_type_url');
 const placeSubmitBtn = formPlace.querySelector('.popup__button');
 
+const popupConfirm = document.querySelector('.popup_confirm_deletion');
+const formConfirm = document.querySelector('[name="confirm_deletion"]');
+
 export const validationConfig = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
@@ -82,6 +85,8 @@ profileImage.addEventListener('click', () => {
   avatarSubmitBtn.textContent = 'Сохранить';
 })
 
+
+
 function submitAvatarForm(popup, evt) {
     evt.preventDefault();
     baseApi.updateAvatar({
@@ -99,6 +104,18 @@ function submitAvatarForm(popup, evt) {
 }
 
 formAvatar.addEventListener('submit', (evt) => submitAvatarForm(popupAvatar, evt));
+
+const submitConfirmForm = (id, cardElement, evt) => {
+  evt.preventDefault();
+  baseApi.deleteCard(id)
+  .then(() => {
+    deleteCard(cardElement);
+    closePopup(popupConfirm);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
 
 function submitProfileForm(popup, evt) {
     evt.preventDefault();
@@ -130,7 +147,7 @@ function submitPlaceForm(popup, evt) {
   baseApi.createCard(place)
     .then((newCardData) => {
       const profileID = newCardData.owner._id;
-      renderCard(newCardData,profileID);
+      placeList.prepend(renderCard(newCardData,profileID));
       closePopup(popup);
     })
     .catch((err) => {
@@ -145,21 +162,17 @@ formPlace.addEventListener('submit', (evt) => submitPlaceForm(popupAddCard, evt)
 enableValidation(validationConfig);
 
 const renderCard = (cardData,profileID) => {
-  placeList.append(
-    createCardElement({
+  //placeList.append(
+    return createCardElement(
       cardData,
-      handleDeleteCard: (id, cardElement) => {
-        baseApi.deleteCard(id)
-          .then(() => {
-            deleteCard(cardElement);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      },
-      handleLikeCard: (cardElement, cardData) => {
-        if(!isLiked(cardElement)) {
-          baseApi.setLike(cardData._id)
+      {
+        handleDeleteCard: (id, cardElement) => {
+          openPopup(popupConfirm);
+          formConfirm.addEventListener('submit', (evt) => submitConfirmForm(id, cardElement, evt));
+        },
+        handleLikeCard: (cardElement, cardData) => {
+          if(!isLiked(cardElement)) {
+            baseApi.setLike(cardData._id)
             .then((cardObj) => {
               togglelikeCard(cardElement);
               updateLikeCounts(cardElement, cardObj);
@@ -167,23 +180,23 @@ const renderCard = (cardData,profileID) => {
             .catch((err) => {
               console.log(err);
             })
-        } else {
-          baseApi.delLike(cardData._id)
-          .then((cardObj) => {
-            togglelikeCard(cardElement);
-            updateLikeCounts(cardElement, cardObj);
-          })
-          .catch((err) => {
-            console.log(err);
-          })
-        }
-      },
-      handleClickCard: (cardData) => {
-        openImagePopup(cardData);
-      },
-      profileID
-    })
-  );
+          } else {
+            baseApi.delLike(cardData._id)
+            .then((cardObj) => {
+              togglelikeCard(cardElement);
+             updateLikeCounts(cardElement, cardObj);
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+          }
+        },
+        handleClickCard: (cardData) => {
+          openImagePopup(cardData);
+        },
+        profileID
+      })
+  //);
 }
 
 Promise.all([baseApi.getUserInfo(), baseApi.getListCards()])
@@ -193,7 +206,7 @@ Promise.all([baseApi.getUserInfo(), baseApi.getListCards()])
   profileImage.setAttribute('style', `background-image: url(${userData.avatar})`);
   const profileID = userData._id
   listCards.forEach((cardData) => {
-    renderCard(cardData,profileID);
+    placeList.append(renderCard(cardData,profileID));
   });
 })
 .catch((err) => {

@@ -17,3 +17,14 @@
     padding: 30px 20px;
   }
 }
+
+.popup__content-confirm_deletion {
+  max-width: 430px;
+  width: 100%;
+  height: min(181px);
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+  box-sizing: border-box;
+  padding: 34px 36px;
+}

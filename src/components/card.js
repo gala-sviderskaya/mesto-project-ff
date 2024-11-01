@@ -13,7 +13,6 @@ export function deleteCard(card) {
 }
 
 export function togglelikeCard(card) {
-  console.log(card);
   const cardLikeBtn = card.querySelector('.card__like-button');
   cardLikeBtn.classList.toggle('card__like-button_is-active');
 }
@@ -24,13 +23,10 @@ export function updateLikeCounts(card, cardObj) {
 }
 
 // @todo: Функция создания карточки
-export  function createCardElement ({
+export  function createCardElement (
   cardData,
-  handleDeleteCard,
-  handleLikeCard,
-  handleClickCard,
-  profileID
-})
+  { handleDeleteCard, handleLikeCard, handleClickCard, profileID }
+)
 {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true); // клонируем
   const cardImage = cardElement.querySelector('.card__image');
