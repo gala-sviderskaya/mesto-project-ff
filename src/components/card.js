@@ -25,7 +25,7 @@ export function updateLikeCounts(card, cardObj) {
 // @todo: Функция создания карточки
 export  function createCardElement (
   cardData,
-  { handleDeleteCard, handleLikeCard, handleClickCard, profileID }
+  { onDeleteCard, handleLikeCard, handleClickCard, profileID }
 )
 {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true); // клонируем
@@ -53,7 +53,7 @@ export  function createCardElement (
   }
 
   removeButton.addEventListener('click', () => {
-    handleDeleteCard(cardData._id, cardElement);
+    onDeleteCard(cardData._id, cardElement);
   });
 
   cardLikeBtn.addEventListener('click', () => {

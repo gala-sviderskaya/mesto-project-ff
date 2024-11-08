@@ -36,6 +36,8 @@ const placeSubmitBtn = formPlace.querySelector('.popup__button');
 const popupConfirm = document.querySelector('.popup_confirm_deletion');
 const formConfirm = document.querySelector('[name="confirm_deletion"]');
 
+let submitConfirmForm = () => {};
+
 export const validationConfig = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
@@ -105,18 +107,6 @@ function submitAvatarForm(popup, evt) {
 
 formAvatar.addEventListener('submit', (evt) => submitAvatarForm(popupAvatar, evt));
 
-const submitConfirmForm = (id, cardElement, evt) => {
-  evt.preventDefault();
-  baseApi.deleteCard(id)
-  .then(() => {
-    deleteCard(cardElement);
-    closePopup(popupConfirm);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-}
-
 function submitProfileForm(popup, evt) {
     evt.preventDefault();
     baseApi.updateProfile({
@@ -134,6 +124,25 @@ function submitProfileForm(popup, evt) {
       profileSubmitBtn.textContent = 'Сохранение...';
     });
 }
+
+const handleDeleteCard = (id, cardElement) => {
+  submitConfirmForm = () => {
+    baseApi.deleteCard(id)
+    .then(() => {
+      deleteCard(cardElement);
+      closePopup(popupConfirm);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+  openPopup(popupConfirm);
+}
+
+formConfirm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  submitConfirmForm();
+})
 
 formProfile.addEventListener('submit', (evt) => submitProfileForm(popupProfile, evt));
 
@@ -162,14 +171,10 @@ formPlace.addEventListener('submit', (evt) => submitPlaceForm(popupAddCard, evt)
 enableValidation(validationConfig);
 
 const renderCard = (cardData,profileID) => {
-  //placeList.append(
     return createCardElement(
       cardData,
       {
-        handleDeleteCard: (id, cardElement) => {
-          openPopup(popupConfirm);
-          formConfirm.addEventListener('submit', (evt) => submitConfirmForm(id, cardElement, evt));
-        },
+        onDeleteCard: handleDeleteCard,
         handleLikeCard: (cardElement, cardData) => {
           if(!isLiked(cardElement)) {
             baseApi.setLike(cardData._id)
@@ -196,7 +201,6 @@ const renderCard = (cardData,profileID) => {
         },
         profileID
       })
-  //);
 }
 
 Promise.all([baseApi.getUserInfo(), baseApi.getListCards()])
@@ -212,13 +216,3 @@ Promise.all([baseApi.getUserInfo(), baseApi.getListCards()])
 .catch((err) => {
   console.log(err);
 });
-
-
-
-
-
-
-
-
-
-
